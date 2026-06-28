@@ -15,7 +15,7 @@ download_mcrcon() {
 		local RELEASE_FILE="mcrcon-0.7.2-linux-x86-64-static"
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
-		rm -rf $RELEASE_FILE # remove extracted folder
+		rm -rf mcrcon # remove extracted folder
 		unzip $RELEASE_FILE.zip
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
