@@ -1,7 +1,5 @@
 #!/bin/bash
-# minecraft server jars
-# pulled from https://gist.github.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9
-LOCAL_DIR="$(dirname "$0")"
+LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVER_DIR="$LOCAL_DIR/server"
 
 # Source: https://askubuntu.com/a/937596
