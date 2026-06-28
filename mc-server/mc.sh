@@ -64,7 +64,10 @@ download_server_jar() {
 		read -r MINECRAFT_VERSION
 	fi
 
+	# minecraft server jars
+	# pulled from https://gist.github.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9
 	MC_SERVER_LIST_URL="https://gist.githubusercontent.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9/raw/3b92a48d565403a877ebc8209357b59870b9cb6c/minecraft-server-jar-downloads.md"
+	
 	MC_SERVER_LIST=$(curl -s $MC_SERVER_LIST_URL | tail -n +3)
 	MC_SERVER_LIST_FORMATTED=$(echo "$MC_SERVER_LIST" | cut -d '|' -f 2,3)
 	SERVER_URL=$(echo "$MC_SERVER_LIST_FORMATTED" | grep "^\s*$MINECRAFT_VERSION\s" | cut -d '|' -f 2 | tr -d ' \t\n')
