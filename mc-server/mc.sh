@@ -1,7 +1,8 @@
 #!/bin/bash
 # minecraft server jars
 # pulled from https://gist.github.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9
-SERVER_DIR=server
+LOCAL_DIR="$(dirname "$0")"
+SERVER_DIR="$LOCAL_DIR/server"
 
 # Source: https://askubuntu.com/a/937596
 # and: https://nickjanetakis.com/blog/ignore-sudo-in-a-shell-script-if-you-are-running-as-root
@@ -11,17 +12,15 @@ sudo() {
 }
 
 download_mcrcon() {
-	mkdir -p "$SERVER_DIR"
-
 	(
-		cd "$SERVER_DIR" || exit
+		cd "$LOCAL_DIR" || exit
 		local RELEASE_FILE="mcrcon-0.7.2-linux-x86-64-static"
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
 		rm -rf $RELEASE_FILE # remove extracted folder
 		unzip $RELEASE_FILE.zip
-
 		rm -f $RELEASE_FILE.zip
+		mv $RELEASE_FILE mcrcon
 	)
 }
 
