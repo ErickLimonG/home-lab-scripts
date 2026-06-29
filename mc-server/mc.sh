@@ -2,12 +2,8 @@
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SERVER_DIR="$LOCAL_DIR/server"
 
-# Source: https://askubuntu.com/a/937596
-# and: https://nickjanetakis.com/blog/ignore-sudo-in-a-shell-script-if-you-are-running-as-root
-sudo() {
-	[[ "${EUID}" == 0 ]] || set -- command sudo "${@}"
-	"${@}"
-}
+source "$LOCAL_DIR/utils/confirmation_prompt.sh"
+source "$LOCAL_DIR/utils/sudo.sh"
 
 download_mcrcon() {
 	(
@@ -20,20 +16,6 @@ download_mcrcon() {
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
 	)
-}
-
-confirmation_prompt() {
-	local PROMPT=$1
-	local REPLY
-	local VALID_REPLY
-
-	while [ -z "$VALID_REPLY" ]; do
-		read -rp "$PROMPT, Y/N: " REPLY
-		REPLY=$(echo "$REPLY" | tr '[:upper:]' '[:lower:]')
-		VALID_REPLY=$(echo "$REPLY" | grep -E "^(y|n)$")
-	done
-
-	echo "$VALID_REPLY"
 }
 
 download_java() {
@@ -67,7 +49,7 @@ download_server_jar() {
 	# minecraft server jars
 	# pulled from https://gist.github.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9
 	MC_SERVER_LIST_URL="https://gist.githubusercontent.com/cliffano/77a982a7503669c3e1acb0a0cf6127e9/raw/3b92a48d565403a877ebc8209357b59870b9cb6c/minecraft-server-jar-downloads.md"
-	
+
 	MC_SERVER_LIST=$(curl -s $MC_SERVER_LIST_URL | tail -n +3)
 	MC_SERVER_LIST_FORMATTED=$(echo "$MC_SERVER_LIST" | cut -d '|' -f 2,3)
 	SERVER_URL=$(echo "$MC_SERVER_LIST_FORMATTED" | grep "^\s*$MINECRAFT_VERSION\s" | cut -d '|' -f 2 | tr -d ' \t\n')
