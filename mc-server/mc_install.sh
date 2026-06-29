@@ -65,7 +65,8 @@ download_server_jar() {
 }
 
 main() {
-	download_server_jar "$@"
+	local MINECRAFT_VERSION=$1
+	download_server_jar "$MINECRAFT_VERSION"
 	download_java
 	download_mcrcon
 }
