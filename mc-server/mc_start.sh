@@ -5,13 +5,17 @@ source "$LOCAL_DIR/utils/confirmation_prompt.sh"
 source "$LOCAL_DIR/utils/sudo.sh"
 
 start_minecraft_server() {
-	local MIN_MEMORY="${1:-1024}M"
-	local MAX_MEMORY="${2:-2048}M"
-	local SERVER_DIR="$LOCAL_DIR/server"
+	(
+		local MIN_MEMORY="${1:-1024}M"
+		local MAX_MEMORY="${2:-2048}M"
+		local SERVER_DIR="$LOCAL_DIR/server"
+		local START_MINECRAFT_SERVER_COMMAND="java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY -jar server.jar --nogui"
 
-	cd "$SERVER_DIR" || exit
-	echo "Starting minecraft server with"
-	nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
+		cd "$SERVER_DIR" || exit
+		echo "Starting minecraft server with command: "
+		echo "$START_MINECRAFT_SERVER_COMMAND"
+		nohup "$START_MINECRAFT_SERVER_COMMAND" &
+	)
 }
 
 eula_prompt() {
