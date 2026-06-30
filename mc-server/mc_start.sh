@@ -19,20 +19,19 @@ eula_prompt() {
 	local EULA="$SERVER_DIR/eula.txt"
 
 	if grep -q "eula=true" "$EULA"; then
-		exit 0
-	fi
-
-	if [[ -e "$EULA" ]]; then
+		exit 2 # eula already true
+	elif grep -q "eula=false" "$EULA"; then
 		echo "Would you like to accept the Minecraft eula?, Y/N"
 		echo "You can read it here https://account.mojang.com/documents/minecraft_eula"
 
 		if confirmation_prompt; then
-			sed -i "s/eula=false/eula=true/g" "$SERVER_DIR/eula.txt"
+			sed -i "s/eula=false/eula=true/g" "$EULA"
 		fi
 	else
-		echo "$EULA not found"
-		exit 0
+		echo "Error: $EULA not found"
+		exit 1
 	fi
+
 }
 
 configure_minecraft_rcon() {
@@ -46,6 +45,9 @@ main() {
 	local MAX_MEMORY="$2"
 	start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	eula_prompt
+	if $?; then
+		start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
+	fi
 }
 
 main "$@"
