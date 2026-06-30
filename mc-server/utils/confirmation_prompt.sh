@@ -1,15 +1,29 @@
 #!/bin/bash
 
-confirmation_prompt() {
-	local PROMPT=$1
+function parse_yes_no() {
 	local REPLY
-	local VALID_REPLY
+	REPLY=$(echo "$1" | tr '[:upper:]' '[:lower:]' | grep -E "^(y(es)?|n(o)?)$")
 
-	while [ -z "$VALID_REPLY" ]; do
-		read -rp "$PROMPT, Y/N: " REPLY
-		REPLY=$(echo "$REPLY" | tr '[:upper:]' '[:lower:]')
-		VALID_REPLY=$(echo "$REPLY" | grep -E "^(y|n)$")
+	case $REPLY in
+	y | yes) echo 0 ;;
+	n | no) echo 1 ;;
+	*) echo 2 ;;
+	esac
+}
+
+confirmation_prompt() {
+	local PROMPT="${1:-""}"
+	local RETRY_PROMPT="${2:-"Please select, Y/N "}"
+	local REPLY
+	local PARSED_REPLY
+
+	read -rp "${PROMPT:+$PROMPT }" REPLY
+	PARSED_REPLY=$(parse_yes_no "$REPLY")
+
+	while [[ $PARSED_REPLY -eq 2 ]]; do
+		read -rp "$RETRY_PROMPT" REPLY
+		PARSED_REPLY=$(parse_yes_no "$REPLY")
 	done
 
-	echo "$VALID_REPLY"
+	return "$PARSED_REPLY"
 }

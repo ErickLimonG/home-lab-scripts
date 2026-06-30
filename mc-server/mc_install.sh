@@ -20,8 +20,7 @@ download_mcrcon() {
 
 download_java() {
 	if [ -z "$(command -v java)" ]; then
-		ANSWER=$(confirmation_prompt "No jre instalation found, would you like to install it?")
-		if [ "$ANSWER" = 'y' ]; then
+		if confirmation_prompt "No jre instalation found, would you like to install it?"; then
 			# https://adoptium.net/installation/linux/
 			# TODO: Select jre automatically or let the user choose (maybe even give suggestions)
 			# TODO: Detect linux distro and automatically download the package accordingly (or install the binary directly)
