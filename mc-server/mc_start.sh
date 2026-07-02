@@ -1,8 +1,8 @@
 #!/bin/bash
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-source "$LOCAL_DIR/utils/confirmation_prompt.sh"
-source "$LOCAL_DIR/utils/sudo.sh"
+source "$LOCAL_DIR/utils/confirmation_prompt.sh" || exit 1
+source "$LOCAL_DIR/utils/sudo.sh" || exit 1
 
 start_minecraft_server() {
 	(
@@ -11,7 +11,7 @@ start_minecraft_server() {
 		local SERVER_DIR="$LOCAL_DIR/server"
 		local START_MINECRAFT_SERVER_COMMAND="java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY -jar server.jar --nogui"
 
-		cd "$SERVER_DIR" || exit
+		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
 		nohup $START_MINECRAFT_SERVER_COMMAND &
@@ -38,20 +38,40 @@ eula_prompt() {
 
 }
 
+add_server_properties() {
+	local SERVER_CONFIG="$LOCAL_DIR/server/server.properties"
+	local KEY=$1
+	local VALUE=$2
+	echo "$KEY=$VALUE" >>"$SERVER_CONFIG"
+}
+
 configure_minecraft_rcon() {
 	#https://minecraft.wiki/w/RCON
-	# TODO: add rcon keys in server.config
-	echo "pending"
+	local SERVER_CONFIG="$LOCAL_DIR/server/server.properties"
+	local PROMPT="Would you like to enable RCON?"
+	if confirmation_prompt "$PROMPT"; then
+		add_server_properties "enable-rcon" "true"
+		add_server_properties "rcon.password" 1
+		add_server_properties "rcon.port" 25575
+		add_server_properties "broadcast-rcon-to-ops" "false"
+	fi
 }
 
 main() {
 	local MIN_MEMORY="$1"
 	local MAX_MEMORY="$2"
 	start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
+
 	eula_prompt
-	if $?; then
+	EULA_PROMPT_EXIT_CODE=$?
+
+	configure_minecraft_rcon
+	# Only works on first install of the server
+	if $EULA_PROMPT_EXIT_CODE; then
 		start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
 }
 
-main "$@"
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+	main "$@"
+fi
