@@ -13,7 +13,7 @@ _start_minecraft_server() {
 
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
-		echo "$START_MINECRAFT_SERVER_COMMAND"
+			 "$START_MINECRAFT_SERVER_COMMAND"
 		nohup $START_MINECRAFT_SERVER_COMMAND &
 	)
 }
