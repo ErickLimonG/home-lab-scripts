@@ -23,7 +23,7 @@ _start_minecraft_server() {
 			# will close because eula has not been accepted
 			touch "$PROJECT_ROOT/.server_has_run_once"
 		fi
-	) 200>/var/lock/mylockfile
+	) 200>/var/lock/mc_server_running_lock
 }
 
 _eula_prompt() {
