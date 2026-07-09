@@ -16,7 +16,7 @@ _start_minecraft_server() {
 
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
-		"$START_MINECRAFT_SERVER_COMMAND"
+		echo "$START_MINECRAFT_SERVER_COMMAND"
 		
 		if [ "$SERVER_HAS_RUN_ONCE" ]; then
 			# TODO: use flock to only allow one instance to run
