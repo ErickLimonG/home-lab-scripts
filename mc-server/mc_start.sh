@@ -13,7 +13,7 @@ _start_minecraft_server() {
 
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
-			 "$START_MINECRAFT_SERVER_COMMAND"
+		"$START_MINECRAFT_SERVER_COMMAND"
 		nohup $START_MINECRAFT_SERVER_COMMAND &
 	)
 }
@@ -57,7 +57,7 @@ _configure_minecraft_rcon() {
 
 		read -rp "Select port from 1 to 65535, press Enter to select default (25575)" PORT
 		_add_server_properties "rcon.port" "${PORT:-25575}"
-		
+
 		_add_server_properties "broadcast-rcon-to-ops" "false"
 	fi
 }
@@ -71,9 +71,9 @@ main() {
 	_eula_prompt
 	EULA_PROMPT_EXIT_CODE=$?
 
-	_configure_minecraft_rcon
 	# Only works on first install of the server
 	if $EULA_PROMPT_EXIT_CODE; then
+		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
 }
