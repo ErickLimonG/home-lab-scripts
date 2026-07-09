@@ -6,6 +6,7 @@ source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
+		flock 200 -n
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
 		local SERVER_DIR="$PROJECT_ROOT/server"
@@ -14,16 +15,15 @@ _start_minecraft_server() {
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
-		
+
 		if [ -e "$PROJECT_ROOT/.server_has_run_once" ]; then
-			# TODO: use flock to only allow one instance to run
 			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
 		else
 			java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
 			# will close because eula has not been accepted
 			touch "$PROJECT_ROOT/.server_has_run_once"
 		fi
-	)
+	) 200>/var/lock/mylockfile
 }
 
 _eula_prompt() {
@@ -79,7 +79,7 @@ main() {
 	_eula_prompt
 	EULA_PROMPT_EXIT_CODE=$?
 
-	if [ $EULA_PROMPT_EXIT_CODE -eq 0 ] && [ -e "$PROJECT_ROOT/server/eula.txt" ] ; then
+	if [ $EULA_PROMPT_EXIT_CODE -eq 0 ] && [ -e "$PROJECT_ROOT/server/eula.txt" ]; then
 		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
