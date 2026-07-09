@@ -1,25 +1,36 @@
 #!/usr/bin/env bash
-LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
-source "$LOCAL_DIR/utils/confirmation_prompt.sh" || exit 1
-source "$LOCAL_DIR/utils/sudo.sh" || exit 1
+source "$PROJECT_ROOT/utils/confirmation_prompt.sh" || exit 1
+source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
+		[ -e "$PROJECT_ROOT/.server_has_run_once" ]
+		local SERVER_HAS_RUN_ONCE=$?
+
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
-		local SERVER_DIR="$LOCAL_DIR/server"
+		local SERVER_DIR="$PROJECT_ROOT/server"
 		local START_MINECRAFT_SERVER_COMMAND="java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY -jar server.jar --nogui"
 
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
 		"$START_MINECRAFT_SERVER_COMMAND"
-		nohup $START_MINECRAFT_SERVER_COMMAND &
+		
+		if [ "$SERVER_HAS_RUN_ONCE" ]; then
+			# TODO: use flock to only allow one instance to run
+			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
+		else
+			java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
+			# will close cause eula has not been accepted
+			touch "$PROJECT_ROOT/.server_has_run_once"
+		fi
 	)
 }
 
 _eula_prompt() {
-	local SERVER_DIR="$LOCAL_DIR/server"
+	local SERVER_DIR="$PROJECT_ROOT/server"
 	local EULA="$SERVER_DIR/eula.txt"
 
 	if grep -q "eula=true" "$EULA"; then
@@ -39,7 +50,7 @@ _eula_prompt() {
 }
 
 _add_server_properties() {
-	local SERVER_CONFIG="$LOCAL_DIR/server/server.properties"
+	local SERVER_CONFIG="$PROJECT_ROOT/server/server.properties"
 	local KEY=$1
 	local VALUE=$2
 	echo "$KEY=$VALUE" >>"$SERVER_CONFIG"
@@ -47,7 +58,7 @@ _add_server_properties() {
 
 _configure_minecraft_rcon() {
 	#https://minecraft.wiki/w/RCON
-	local SERVER_CONFIG="$LOCAL_DIR/server/server.properties"
+	local SERVER_CONFIG="$PROJECT_ROOT/server/server.properties"
 	local PROMPT="Would you like to enable RCON?"
 	if confirmation_prompt "$PROMPT"; then
 		_add_server_properties "enable-rcon" "true"
@@ -71,8 +82,7 @@ main() {
 	_eula_prompt
 	EULA_PROMPT_EXIT_CODE=$?
 
-	# Only works on first install of the server
-	if $EULA_PROMPT_EXIT_CODE; then
+	if $EULA_PROMPT_EXIT_CODE && [ -e "$PROJECT_ROOT/server/eula.txt" ] ; then
 		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
