@@ -6,9 +6,6 @@ source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
-		[ -e "$PROJECT_ROOT/.server_has_run_once" ]
-		local SERVER_HAS_RUN_ONCE=$?
-
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
 		local SERVER_DIR="$PROJECT_ROOT/server"
@@ -18,7 +15,7 @@ _start_minecraft_server() {
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
 		
-		if [ "$SERVER_HAS_RUN_ONCE" ]; then
+		if [ -e "$PROJECT_ROOT/.server_has_run_once" ]; then
 			# TODO: use flock to only allow one instance to run
 			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
 		else
