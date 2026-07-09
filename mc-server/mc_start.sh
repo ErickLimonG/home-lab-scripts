@@ -20,7 +20,7 @@ _start_minecraft_server() {
 			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
 		else
 			java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
-			# will close cause eula has not been accepted
+			# will close because eula has not been accepted
 			touch "$PROJECT_ROOT/.server_has_run_once"
 		fi
 	)
@@ -79,7 +79,7 @@ main() {
 	_eula_prompt
 	EULA_PROMPT_EXIT_CODE=$?
 
-	if $EULA_PROMPT_EXIT_CODE && [ -e "$PROJECT_ROOT/server/eula.txt" ] ; then
+	if [ $EULA_PROMPT_EXIT_CODE -eq 0 ] && [ -e "$PROJECT_ROOT/server/eula.txt" ] ; then
 		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
