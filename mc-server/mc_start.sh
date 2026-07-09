@@ -6,7 +6,7 @@ source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
-		flock 200 -n
+		flock -n 200
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
 		local SERVER_DIR="$PROJECT_ROOT/server"
