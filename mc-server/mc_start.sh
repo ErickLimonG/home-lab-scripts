@@ -11,17 +11,18 @@ _start_minecraft_server() {
 		local MAX_MEMORY="${2:-2048}M"
 		local SERVER_DIR="$PROJECT_ROOT/server"
 		local START_MINECRAFT_SERVER_COMMAND="java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY -jar server.jar --nogui"
+		local SERVER_HAS_RUN_ONCE_FILE="$PROJECT_ROOT/server/.server_has_run_once"
 
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
 
-		if [ -e "$PROJECT_ROOT/.server_has_run_once" ]; then
+		if [ -e "$SERVER_HAS_RUN_ONCE_FILE" ]; then
 			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
 		else
 			java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
 			# will close because eula has not been accepted
-			touch "$PROJECT_ROOT/.server_has_run_once"
+			touch "$SERVER_HAS_RUN_ONCE_FILE"
 		fi
 	) 200>/var/lock/mc_server_running_lock
 
