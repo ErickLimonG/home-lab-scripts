@@ -30,9 +30,9 @@ _eula_prompt() {
 	local SERVER_DIR="$PROJECT_ROOT/server"
 	local EULA="$SERVER_DIR/eula.txt"
 
-	if grep -q "eula=true" "$EULA"; then
+	if grep -sq "eula=true" "$EULA"; then
 		return 2
-	elif grep -q "eula=false" "$EULA"; then
+	elif grep -sq "eula=false" "$EULA"; then
 		echo "Would you like to accept the Minecraft eula?, Y/N"
 		echo "You can read it here https://account.mojang.com/documents/minecraft_eula"
 
