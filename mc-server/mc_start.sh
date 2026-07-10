@@ -6,7 +6,7 @@ source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
-		flock -n 200
+		flock -n 200 || exit 1
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
 		local SERVER_DIR="$PROJECT_ROOT/server"
@@ -24,6 +24,10 @@ _start_minecraft_server() {
 			touch "$PROJECT_ROOT/.server_has_run_once"
 		fi
 	) 200>/var/lock/mc_server_running_lock
+
+	if [ $? -ne 0 ]; then
+		echo "Error: A server instance is already running"
+	fi
 }
 
 _eula_prompt() {
