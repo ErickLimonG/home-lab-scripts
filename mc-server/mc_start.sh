@@ -65,10 +65,11 @@ _configure_minecraft_rcon() {
 	if confirmation_prompt "$PROMPT"; then
 		_add_server_properties "enable-rcon" "true"
 
-		read -rsp "Please set a password" RCON_PASSWORD
+		read -rsp "Please set a password: " RCON_PASSWORD
 		_add_server_properties "rcon.password" "$RCON_PASSWORD"
 
-		read -rp "Select port from 1 to 65535, press Enter to select default (25575)" PORT
+		echo
+		read -rp "Select port from 1 to 65535, press Enter to select default (25575): " PORT
 		_add_server_properties "rcon.port" "${PORT:-25575}"
 
 		_add_server_properties "broadcast-rcon-to-ops" "false"
