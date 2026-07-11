@@ -86,6 +86,7 @@ main() {
 	EULA_PROMPT_EXIT_CODE=$?
 
 	if [ $EULA_PROMPT_EXIT_CODE -eq 0 ] && [ -e "$PROJECT_ROOT/server/eula.txt" ]; then
+		# Only executes on first run
 		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 	fi
