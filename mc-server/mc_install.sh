@@ -50,7 +50,7 @@ download_server_jar() {
 	local SERVER_URL
 
 	if [ -e  "$SERVER_DIR/server.jar" ]; then
-		confirmation_prompt "server.jar already installed would you like to replace it with another version?"
+		confirmation_prompt "server.jar is already installed would you like to replace it with another version?"
 		if [ $? -eq 1 ]; then
 			return 0
 		fi
