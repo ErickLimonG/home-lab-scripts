@@ -7,6 +7,11 @@ source "$LOCAL_DIR/utils/sudo.sh"
 
 download_mcrcon() {
 	(
+		if [ -e /usr/local/bin/mcrcon ] && [ -e /usr/local/share/man/man1/mcrcon.1 ]; then
+			echo "mcrcon already installed, skipping ..."
+			return 0
+		fi
+
 		cd "$LOCAL_DIR" || exit
 		local RELEASE_FILE="mcrcon-0.7.2-linux-x86-64-static"
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
@@ -15,6 +20,10 @@ download_mcrcon() {
 		unzip $RELEASE_FILE.zip
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
+
+		cp mcrcon /usr/local/bin/mcrcon
+		cp mcrcon.1 /usr/local/share/man/man1/mcrcon.1
+		rm -rf mcrcon
 	)
 }
 
