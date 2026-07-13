@@ -18,7 +18,7 @@ _start_minecraft_server() {
 		echo "$START_MINECRAFT_SERVER_COMMAND"
 
 		if [ -e "$SERVER_HAS_RUN_ONCE_FILE" ]; then
-			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui &
+			nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui >/dev/null 2>&1 &
 		else
 			java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui
 			# will close because eula has not been accepted
