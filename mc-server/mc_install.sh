@@ -21,8 +21,8 @@ download_mcrcon() {
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
 
-		cp mcrcon /usr/local/bin/mcrcon
-		cp mcrcon.1 /usr/local/share/man/man1/mcrcon.1
+		cp mcrcon/mcrcon /usr/local/bin/mcrcon
+		cp mcrcon/mcrcon.1 /usr/local/share/man/man1/mcrcon.1
 		rm -rf mcrcon
 	)
 }
@@ -74,8 +74,8 @@ download_server_jar() {
 
 main() {
 	local MINECRAFT_VERSION=$1
-	download_server_jar "$MINECRAFT_VERSION"
-	download_java
+	#download_server_jar "$MINECRAFT_VERSION"
+	#download_java
 	download_mcrcon
 }
 
