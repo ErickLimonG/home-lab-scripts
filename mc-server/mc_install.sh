@@ -1,6 +1,5 @@
 #!/bin/bash
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SERVER_DIR="$LOCAL_DIR/server"
 
 source "$LOCAL_DIR/utils/confirmation_prompt.sh"
 source "$LOCAL_DIR/utils/sudo.sh"
@@ -47,7 +46,15 @@ download_server_jar() {
 	local MC_SERVER_LIST_URL
 	local MC_SERVER_LIST
 	local MC_SERVER_LIST_FORMATTED
+	local SERVER_DIR="$LOCAL_DIR/server"
 	local SERVER_URL
+
+	if [ -e  "$SERVER_DIR/server.jar" ]; then
+		confirmation_prompt "server.jar already installed would you like to replace it with another version?"
+		if [ $? -eq 1 ]; then
+			return 0
+		fi
+	fi
 
 	if [ -z "$MINECRAFT_VERSION" ]; then
 		echo "Write minecraft server version you would like to download ex. 1.7.10"
