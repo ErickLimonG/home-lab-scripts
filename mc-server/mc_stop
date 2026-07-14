@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-
-source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 #TODO: add flag to force shutdown
 _get_minecraft_server_pid() {

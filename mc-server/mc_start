@@ -2,7 +2,6 @@
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 source "$PROJECT_ROOT/utils/confirmation_prompt.sh" || exit 1
-source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
@@ -79,7 +78,8 @@ _configure_minecraft_rcon() {
 main() {
 	local MIN_MEMORY="$1"
 	local MAX_MEMORY="$2"
-
+	local EULA_PROMPT_EXIT_CODE
+	
 	_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 
 	_eula_prompt

@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-function parse_yes_no() {
+parse_yes_no() {
 	local REPLY
 	REPLY=$(echo "$1" | tr '[:upper:]' '[:lower:]' | grep -E "^(y(es)?|n(o)?)$")
 
