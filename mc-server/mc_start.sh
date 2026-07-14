@@ -78,7 +78,8 @@ _configure_minecraft_rcon() {
 main() {
 	local MIN_MEMORY="$1"
 	local MAX_MEMORY="$2"
-
+	local EULA_PROMPT_EXIT_CODE
+	
 	_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 
 	_eula_prompt
