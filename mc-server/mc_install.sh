@@ -2,8 +2,8 @@
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 source "$LOCAL_DIR/utils/check_root_permission.sh" || exit 1
-source "$LOCAL_DIR/utils/confirmation_prompt.sh"
-source "$LOCAL_DIR/utils/sudo.sh"
+source "$LOCAL_DIR/utils/confirmation_prompt.sh" || exit 1
+source "$LOCAL_DIR/utils/sudo.sh" || exit 1
 
 _download_mcrcon() {
 	(
