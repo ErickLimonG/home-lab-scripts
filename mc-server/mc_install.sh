@@ -7,13 +7,13 @@ source "$LOCAL_DIR/utils/sudo.sh" || exit 1
 
 _download_mcrcon() {
 	(
+		local RELEASE_FILE="mcrcon-0.7.2-linux-x86-64-static"
 		if [ -e /usr/local/bin/mcrcon ] && [ -e /usr/local/share/man/man1/mcrcon.1 ]; then
 			echo "mcrcon already installed, skipping ..."
 			return 0
 		fi
 
 		cd "$LOCAL_DIR" || exit
-		local RELEASE_FILE="mcrcon-0.7.2-linux-x86-64-static"
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
 		rm -rf mcrcon # remove extracted folder
@@ -81,8 +81,10 @@ _download_server_jar() {
 }
 
 main() {
-	check_root_permission
 	local MINECRAFT_VERSION=$1
+
+	check_root_permission
+	
 	_download_server_jar "$MINECRAFT_VERSION"
 	_download_java
 	_download_mcrcon
