@@ -1,6 +1,7 @@
 #!/bin/bash
 LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+source "$LOCAL_DIR/utils/check_root_permission.sh" || exit 1
 source "$LOCAL_DIR/utils/confirmation_prompt.sh"
 source "$LOCAL_DIR/utils/sudo.sh"
 
@@ -80,6 +81,7 @@ download_server_jar() {
 }
 
 main() {
+	check_root_permission
 	local MINECRAFT_VERSION=$1
 	download_server_jar "$MINECRAFT_VERSION"
 	download_java
