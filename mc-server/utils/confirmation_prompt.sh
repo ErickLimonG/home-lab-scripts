@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 parse_yes_no() {
 	local REPLY
