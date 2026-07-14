@@ -2,7 +2,6 @@
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 source "$PROJECT_ROOT/utils/confirmation_prompt.sh" || exit 1
-source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _start_minecraft_server() {
 	(
