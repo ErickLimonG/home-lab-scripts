@@ -5,7 +5,7 @@ source "$LOCAL_DIR/utils/check_root_permission.sh" || exit 1
 source "$LOCAL_DIR/utils/confirmation_prompt.sh"
 source "$LOCAL_DIR/utils/sudo.sh"
 
-download_mcrcon() {
+_download_mcrcon() {
 	(
 		if [ -e /usr/local/bin/mcrcon ] && [ -e /usr/local/share/man/man1/mcrcon.1 ]; then
 			echo "mcrcon already installed, skipping ..."
@@ -27,7 +27,7 @@ download_mcrcon() {
 	)
 }
 
-download_java() {
+_download_java() {
 	if [ -z "$(command -v java)" ]; then
 		if confirmation_prompt "No jre instalation found, would you like to install it?"; then
 			# https://adoptium.net/installation/linux/
@@ -42,7 +42,7 @@ download_java() {
 	fi
 }
 
-download_server_jar() {
+_download_server_jar() {
 	local MINECRAFT_VERSION=$1
 	local MC_SERVER_LIST_URL
 	local MC_SERVER_LIST
@@ -83,9 +83,9 @@ download_server_jar() {
 main() {
 	check_root_permission
 	local MINECRAFT_VERSION=$1
-	download_server_jar "$MINECRAFT_VERSION"
-	download_java
-	download_mcrcon
+	_download_server_jar "$MINECRAFT_VERSION"
+	_download_java
+	_download_mcrcon
 }
 
 main "$@"
