@@ -9,13 +9,14 @@ main() {
 	local PASSWORD
 	# TODO: make password optional or prompt for an automatically generated one
 	# TODO: make the generated password have an option for human readable with random words from dict
-	PASSWORD=$(openssl rand -base64 15)
+	PASSWORD=$(openssl rand -base64 24)
 
 	adduser "$USERNAME" --disabled-password --comment "$COMMENT"
 	# can also do passwd -d $username
 
 	usermod -a -G sudo "$USERNAME"
 	"$PROJECT_ROOT"/set_user_password.exp "$USERNAME" "$PASSWORD"
+	echo Your password is "$PASSWORD", you can change it by typing passwd once logged in
 }
 
 main "$@"
