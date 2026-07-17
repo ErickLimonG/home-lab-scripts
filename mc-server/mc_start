@@ -27,6 +27,17 @@ _start_minecraft_server() {
 _eula_prompt() {
 	local SERVER_DIR="$PROJECT_ROOT/server"
 	local EULA="$SERVER_DIR/eula.txt"
+	local TIMEOUT=30
+	
+	SECONDS=0
+	until [ -s "$EULA" ] || ((SECONDS >= TIMEOUT)); do
+		sleep 1
+	done
+
+	if [ ! -s "$EULA" ]; then
+		echo "ERROR: Eula.txt could not be found" 1>&2
+		exit 1
+	fi
 
 	if grep -sq "eula=true" "$EULA"; then
 		return 2
@@ -37,9 +48,6 @@ _eula_prompt() {
 		if confirmation_prompt; then
 			sed -i "s/eula=false/eula=true/g" "$EULA"
 		fi
-	else
-		echo "Error: $EULA not found"
-		exit 1
 	fi
 
 }
@@ -72,14 +80,10 @@ _configure_minecraft_rcon() {
 main() {
 	local MIN_MEMORY="$1"
 	local MAX_MEMORY="$2"
-	local EULA_PROMPT_EXIT_CODE
 	
 	_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
 
-	_eula_prompt
-	EULA_PROMPT_EXIT_CODE=$?
-
-	if [ $EULA_PROMPT_EXIT_CODE -eq 0 ] && [ -e "$PROJECT_ROOT/server/eula.txt" ]; then
+	if _eula_prompt; then
 		# Only executes on first run
 		_configure_minecraft_rcon
 		_start_minecraft_server "$MIN_MEMORY" "$MAX_MEMORY"
