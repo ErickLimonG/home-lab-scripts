@@ -1,14 +1,22 @@
 #!/usr/bin/env bats
+
+cleanup() {
+    cd "$PROJECT_ROOT" || exit 1
+    rm -rf server/!(server.jar)
+}
+
 setup() {
     load "test_helper/common-setup"
-    _common_setup
-    source "$PROJECT_ROOT/mc-start.sh"
+    common_setup
+    rm -rf "$PROJECT_ROOT/server/!(server.jar)"
+    ( cleanup )
 }
 
 teardown() {
-    rm -rf "$PROJECT_ROOT/server"
+    ( cleanup )
 }
 
-@test "_configure_minecraft_rcon" {
-    [[ true ]]
+@test "1 - e2e " {
+    run ./mc_start_expect.exp
+    assert_success
 }

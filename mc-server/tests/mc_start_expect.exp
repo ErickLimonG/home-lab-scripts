@@ -1,0 +1,22 @@
+#!/usr/bin/env expect
+
+set basedir [file normalize [file dirname $argv0]]/..
+set startscript $basedir/mc_start
+set password "aaa"
+
+spawn $startscript
+
+# First run
+
+# Would you like to accept the Minecraft eula?
+expect "https://account.mojang.com/documents/minecraft_eula"
+send "yes"
+
+expect "Would you like to enable RCON?"
+send "yes"
+
+expect "Please set a password"
+send $password
+
+expect "Select port from 1 to 65535, press Enter to select default (25575): "
+send "\n"
