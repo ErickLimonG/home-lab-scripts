@@ -7,8 +7,8 @@ common_setup() {
 	PROJECT_ROOT="$(cd "$(dirname "$BATS_TEST_FILENAME")/.." >/dev/null 2>&1 && pwd)"
 	# make executables in src/ visible to PATH
 	PATH="$PROJECT_ROOT:$PATH"
+	PATH="$PROJECT_ROOT/tests:$PATH"
 
-	local TEST_LIBS_ROOT="$PROJECT_ROOT/../test/libs"
-	load "$TEST_LIBS_ROOT/bats-support/load"
-	load "$TEST_LIBS_ROOT/bats-assert/load"
+    load "../../test/libs/bats-support/load"
+    load "../../test/libs/bats-assert/load"
 }

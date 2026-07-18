@@ -1,4 +1,5 @@
 #!/usr/bin/env bats
+shopt -s extglob
 
 cleanup() {
     cd "$PROJECT_ROOT" || exit 1
@@ -17,6 +18,6 @@ teardown() {
 }
 
 @test "1 - e2e " {
-    run ./mc_start_expect.exp
+    run mc_start_first_run_e2e.exp
     assert_success
 }
