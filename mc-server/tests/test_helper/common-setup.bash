@@ -9,6 +9,7 @@ common_setup() {
 	PATH="$PROJECT_ROOT:$PATH"
 	PATH="$PROJECT_ROOT/tests:$PATH"
 
-    load "../../test/libs/bats-support/load"
-    load "../../test/libs/bats-assert/load"
+    load "../../test/bats-support/load"
+    load "../../test/bats-assert/load"
+	load "../../test/bats-file/load"
 }
