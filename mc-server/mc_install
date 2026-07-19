@@ -21,8 +21,8 @@ _download_mcrcon() {
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
 
-		cp mcrcon/mcrcon /usr/local/bin/mcrcon
-		cp mcrcon/mcrcon.1 /usr/local/share/man/man1/mcrcon.1
+		sudo cp mcrcon/mcrcon /usr/local/bin/mcrcon
+		sudo cp mcrcon/mcrcon.1 /usr/local/share/man/man1/mcrcon.1
 		rm -rf mcrcon
 	)
 }
