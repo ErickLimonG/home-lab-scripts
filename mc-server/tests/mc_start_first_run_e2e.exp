@@ -1,10 +1,10 @@
 #!/usr/bin/env expect
 
 set basedir [file normalize [file dirname $argv0]]/..
-set startscript $basedir/mc_start
+set start_script $basedir/mc_start
 set password "aaa"
 
-spawn $startscript
+spawn $start_script
 
 # First run
 
