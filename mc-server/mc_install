@@ -58,7 +58,7 @@ _download_server_jar() {
 	fi
 
 	if [ -z "$MINECRAFT_VERSION" ]; then
-		echo "Write the minecraft server version you would like to download ex. 1.7.10"
+		echo "Write which minecraft server version you would like to download ex. 1.7.10"
 		read -r MINECRAFT_VERSION
 	fi
 
