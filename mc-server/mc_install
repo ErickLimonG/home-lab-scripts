@@ -13,11 +13,11 @@ _download_mcrcon() {
 			return 0
 		fi
 
-		cd "$LOCAL_DIR" || exit
+		cd "$LOCAL_DIR" || exit 1
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
 		rm -rf mcrcon # remove extracted folder
-		unzip $RELEASE_FILE.zip
+		unzip -qq $RELEASE_FILE.zip
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
 
