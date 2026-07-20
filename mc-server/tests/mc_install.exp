@@ -5,12 +5,12 @@ set basedir [file normalize [file dirname $argv0]]/..
 set install_script $basedir/mc_install
 
 # based on https://stackoverflow.com/a/55695100
-stty -echo
-    send_tty "sudo password: "
-    expect_tty -re "(.*)\n"
-    send_tty "\n"
-    set password $expect_out(1,string)
-stty echo
+#stty -echo
+#    send_tty "sudo password: "
+#    expect_tty -re "(.*)\n"
+#    send_tty "\n"
+#    set password $expect_out(1,string)
+#stty echo
 
 set timeout 60
 
@@ -25,8 +25,8 @@ expect {
     }
 }
 
-expect "assword"
-send -- "$password\n"
+#expect "assword"
+#send -- "$password\n"
 
 expect eof
 
