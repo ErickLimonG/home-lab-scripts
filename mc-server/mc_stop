@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 #TODO: add flag to force shutdown
-_get_minecraft_server_pid() {
-	local SERVER_PID
-	SERVER_PID=$(fuser /var/lock/mc_server_running_lock 2>&- | grep -o '[0-9]*')
-	echo "$SERVER_PID"
-}
 
 _is_mcrcon_installed() {
 	if [ -e /usr/local/bin/mcrcon ] && [ -e /usr/local/share/man/man1/mcrcon.1 ]; then
