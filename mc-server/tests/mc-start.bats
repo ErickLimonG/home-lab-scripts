@@ -1,23 +1,19 @@
 #!/usr/bin/env bats
-shopt -s extglob
-
-cleanup() {
-    cd "$PROJECT_ROOT" || exit 1
-    rm -rf server/!(server.jar)
-}
 
 setup() {
     load "test_helper/common-setup"
+    load "test_helper/cleanup-install.bash"
+    
     common_setup
-    rm -rf "$PROJECT_ROOT/server/!(server.jar)"
-    ( cleanup )
+    cleanup-install
+    bash mc_install.exp
 }
 
 teardown() {
-    ( cleanup )
+    cleanup
 }
 
-@test "1 - e2e " {
-    run mc_start_first_run_e2e.exp
+@test "1 - pending " {
+    run mc_start.exp
     assert_success
 }

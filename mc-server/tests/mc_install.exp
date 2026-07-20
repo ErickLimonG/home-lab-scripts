@@ -1,0 +1,20 @@
+#!/usr/bin/env expect
+
+set basedir [file normalize [file dirname $argv0]]/..
+set stop_script $basedir/mc_install
+set timeout 60
+
+spawn $stop_script
+
+expect {
+    "Write which minecraft server version you would like to download" {
+        send "1.7.10\n"
+        exp_continue
+    }
+    "would you like to replace it with another version?"{
+        send "no\n"
+        exp_continue
+    }
+    eof
+}
+
