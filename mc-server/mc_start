@@ -2,6 +2,7 @@
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 
 source "$PROJECT_ROOT/../utils/confirmation_prompt.sh" || exit 1
+source "$PROJECT_ROOT/tests/test-helper/close_non_std_fds.bash" || exit 1
 
 _start_minecraft_server() {
 	(
@@ -14,8 +15,10 @@ _start_minecraft_server() {
 		cd "$SERVER_DIR" || exit 1
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
-
+		
+		close_non_std_fds
 		nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui >/dev/null 2>&1 &
+		disown
 
 	) 200>/var/lock/mc_server_running_lock
 
