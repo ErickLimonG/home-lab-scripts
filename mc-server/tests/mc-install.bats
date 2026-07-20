@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
 setup() {
-    load "test_helper/common-setup"
-    load "test_helper/cleanup-install.bash"
+    load "test-helper/common-setup"
+    load "test-helper/cleanup-install.bash"
     
     common_setup
     cleanup-install
