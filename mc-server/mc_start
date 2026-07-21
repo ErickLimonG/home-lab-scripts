@@ -16,9 +16,8 @@ _start_minecraft_server() {
 		echo "Starting minecraft server with command: "
 		echo "$START_MINECRAFT_SERVER_COMMAND"
 		
-		close_non_std_fds
+		close_non_std_fds 200
 		nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui >/dev/null 2>&1 &
-		disown
 
 	) 200>/var/lock/mc_server_running_lock
 
@@ -59,7 +58,11 @@ _add_server_properties() {
 	local SERVER_CONFIG="$PROJECT_ROOT/server/server.properties"
 	local KEY=$1
 	local VALUE=$2
-	echo "$KEY=$VALUE" >>"$SERVER_CONFIG"
+	if grep "$KEY=.*" "$SERVER_CONFIG"; then
+		sed -i "/^$KEY=/c\\$KEY=$VALUE" "$SERVER_CONFIG"
+	else
+		echo "$KEY=$VALUE" >>"$SERVER_CONFIG"
+	fi
 }
 
 _configure_minecraft_rcon() {

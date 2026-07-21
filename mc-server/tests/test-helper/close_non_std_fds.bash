@@ -59,9 +59,16 @@ function get_open_fds() {
 }
 
 function close_non_std_fds() {
+  local preserve_fds=("$@")
   local open_fds non_std_fds=()
   get_open_fds
   for fd in "${open_fds[@]}"; do
+	# shellcheck disable=SC2199
+	if [[ "${preserve_fds[@]}" =~ $fd ]];then
+		continue
+	fi
+	# if fd in skip list
+	# continue to the next iteration
     if [[ $fd -gt 2 ]]; then
       non_std_fds+=("$fd")
     fi
