@@ -67,8 +67,6 @@ function close_non_std_fds() {
 	if [[ "${preserve_fds[@]}" =~ $fd ]];then
 		continue
 	fi
-	# if fd in skip list
-	# continue to the next iteration
     if [[ $fd -gt 2 ]]; then
       non_std_fds+=("$fd")
     fi
