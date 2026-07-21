@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
-
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 #TODO: add flag to force shutdown
+
+source "$PROJECT_ROOT/utils/get_minecraft_server_pid.bash"
 
 _is_mcrcon_installed() {
 	if [ -e /usr/local/bin/mcrcon ] && [ -e /usr/local/share/man/man1/mcrcon.1 ]; then
@@ -11,13 +13,25 @@ _is_mcrcon_installed() {
 }
 
 _stop_minecraft_server() {
+	local MODE=$1
 	local RCON_ENABLED
 	local RCON_PASSWORD
 	local RCON_PORT
+	local TIMEOUT=30
 
 	RCON_ENABLED=$(grep enable-rcon <server/server.properties | cut -d "=" -f 2)
 	RCON_PASSWORD=$(grep rcon.password <server/server.properties | cut -d "=" -f 2)
 	RCON_PORT=$(grep rcon.port <server/server.properties | cut -d "=" -f 2)
+
+	if [ -z "$(get_minecraft_server_pid)" ]; then 
+		echo "WARNING: No minecraft server running"
+		exit 0
+	fi
+
+	if [ "$MODE" = "f" ]; then # Force
+		kill "$(get_minecraft_server_pid)"
+		exit 0
+	fi
 
 	if ! _is_mcrcon_installed; then
 		echo "ERROR: mcrcon is not installed" 1>&2
@@ -25,15 +39,28 @@ _stop_minecraft_server() {
 	fi
 
 	if [ "$RCON_ENABLED" != "true" ]; then
-		echo "ERROR: rcon is not enabled" 1>&2
-		exit 1
+		echo "WARNING: rcon is not enabled"
+		exit 0
 	fi
 
-	mcrcon -P "$RCON_PORT" -p "$RCON_PASSWORD" stop
+	SECONDS=0
+	until ((SECONDS>=TIMEOUT)); do
+		local STOP_OUTPUT
+		STOP_OUTPUT=$(mcrcon -P "$RCON_PORT" -p "$RCON_PASSWORD" stop)
+
+		if [ "$STOP_OUTPUT" = "Stopping the server" ]; then
+			exit 0
+		fi
+
+		sleep 1
+	done
+	
+	echo "ERROR: Could not stop minecraft server" 1>&2
+	exit 1
 }
 
 main() {
-	_stop_minecraft_server
+	_stop_minecraft_server "$@"
 }
 
 if [ "$0" = "${BASH_SOURCE[0]}" ]; then
