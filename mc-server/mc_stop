@@ -46,9 +46,9 @@ _stop_minecraft_server() {
 	SECONDS=0
 	until ((SECONDS>=TIMEOUT)); do
 		local STOP_OUTPUT
-		STOP_OUTPUT=$(mcrcon -P "$RCON_PORT" -p "$RCON_PASSWORD" stop)
+		STOP_OUTPUT=$(mcrcon -P "$RCON_PORT" -p "$RCON_PASSWORD" stop 2>&1)
 
-		if [ "$STOP_OUTPUT" = "Stopping the server" ]; then
+		if [ "$STOP_OUTPUT" = "Connection lost." ]; then
 			exit 0
 		fi
 
