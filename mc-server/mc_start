@@ -18,7 +18,7 @@ _start_minecraft_server() {
 		
 		close_non_std_fds 200
 		nohup java -Xms"$MIN_MEMORY" -Xmx"$MAX_MEMORY" -jar server.jar --nogui >/dev/null 2>&1 &
-
+		disown
 	) 200>/var/lock/mc_server_running_lock
 
 	if [ $? -ne 0 ]; then
