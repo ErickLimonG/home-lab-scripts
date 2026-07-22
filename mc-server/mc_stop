@@ -17,7 +17,7 @@ _stop_minecraft_server() {
 	local RCON_ENABLED
 	local RCON_PASSWORD
 	local RCON_PORT
-	local TIMEOUT=30
+	local TIMEOUT=60
 
 	RCON_ENABLED=$(grep enable-rcon <server/server.properties | cut -d "=" -f 2)
 	RCON_PASSWORD=$(grep rcon.password <server/server.properties | cut -d "=" -f 2)
@@ -48,7 +48,7 @@ _stop_minecraft_server() {
 		local STOP_OUTPUT
 		STOP_OUTPUT=$(mcrcon -P "$RCON_PORT" -p "$RCON_PASSWORD" stop 2>&1)
 
-		if [ "$STOP_OUTPUT" = "Connection lost." ]; then
+		if [[ $STOP_OUTPUT == *"Stopping the server"* ]]; then
 			exit 0
 		fi
 
