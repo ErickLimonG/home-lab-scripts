@@ -1,0 +1,32 @@
+#!/usr/bin/env expect
+exp_internal 1
+
+set basedir [file normalize [file dirname $argv0]]/..
+set install_script $basedir/mc_install
+
+# based on https://stackoverflow.com/a/55695100
+#stty -echo
+#    send_tty "sudo password: "
+#    expect_tty -re "(.*)\n"
+#    send_tty "\n"
+#    set password $expect_out(1,string)
+#stty echo
+
+set timeout 60
+
+spawn $install_script
+
+expect {
+    "Write which minecraft server version you would like to download" {
+        send "1.7.10\n"
+    }
+    "would you like to replace it with another version?"{
+        send "yes\n"
+    }
+}
+
+#expect "assword"
+#send -- "$password\n"
+
+expect eof
+

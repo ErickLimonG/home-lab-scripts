@@ -13,16 +13,16 @@ _download_mcrcon() {
 			return 0
 		fi
 
-		cd "$LOCAL_DIR" || exit
+		cd "$LOCAL_DIR" || exit 1
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
 		rm -rf mcrcon # remove extracted folder
-		unzip $RELEASE_FILE.zip
+		unzip -qq $RELEASE_FILE.zip
 		rm -f $RELEASE_FILE.zip
 		mv $RELEASE_FILE mcrcon
 
-		cp mcrcon/mcrcon /usr/local/bin/mcrcon
-		cp mcrcon/mcrcon.1 /usr/local/share/man/man1/mcrcon.1
+		sudo cp mcrcon/mcrcon /usr/local/bin/mcrcon
+		sudo cp mcrcon/mcrcon.1 /usr/local/share/man/man1/mcrcon.1
 		rm -rf mcrcon
 	)
 }
@@ -58,7 +58,7 @@ _download_server_jar() {
 	fi
 
 	if [ -z "$MINECRAFT_VERSION" ]; then
-		echo "Write minecraft server version you would like to download ex. 1.7.10"
+		echo "Write which minecraft server version you would like to download ex. 1.7.10"
 		read -r MINECRAFT_VERSION
 	fi
 
