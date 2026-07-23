@@ -1,13 +1,12 @@
 #!/usr/bin/env bats
 
 setup_file() {
-    load "test-helper/cleanup-install"
-    load "test-helper/common-setup"
+    load "test-helper/common_setup"
     bash mc_stop
 }
 
 setup() {
-    load "test-helper/common-setup"
+    load "test-helper/common_setup"
     
     common_setup
 }
