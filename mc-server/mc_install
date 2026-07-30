@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-LOCAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MC_SERVER_ROOT="$PROJECT_ROOT/mc-server"
 
-source "$LOCAL_DIR/../utils/check_root_permission.sh" || exit 1
-source "$LOCAL_DIR/../utils/confirmation_prompt.sh" || exit 1
-source "$LOCAL_DIR/../utils/sudo.sh" || exit 1
+source "$PROJECT_ROOT/utils/check_root_permission.sh" || exit 1
+source "$PROJECT_ROOT/utils/confirmation_prompt.sh" || exit 1
+source "$PROJECT_ROOT/utils/sudo.sh" || exit 1
 
 _download_mcrcon() {
 	(
@@ -13,7 +14,7 @@ _download_mcrcon() {
 			return 0
 		fi
 
-		cd "$LOCAL_DIR" || exit 1
+		cd "$MC_SERVER_ROOT" || exit 1
 		curl -OLs https://github.com/Tiiffi/mcrcon/releases/download/v0.7.2/$RELEASE_FILE.zip
 
 		rm -rf mcrcon # remove extracted folder
@@ -47,10 +48,10 @@ _download_server_jar() {
 	local MC_SERVER_LIST_URL
 	local MC_SERVER_LIST
 	local MC_SERVER_LIST_FORMATTED
-	local SERVER_DIR="$LOCAL_DIR/server"
+	local SERVER_DIR="$MC_SERVER_ROOT/server"
 	local SERVER_URL
 
-	if [ -e  "$SERVER_DIR/server.jar" ]; then
+	if [ -e "$SERVER_DIR/server.jar" ]; then
 		confirmation_prompt "server.jar is already installed would you like to replace it with another version?"
 		if [ $? -eq 1 ]; then
 			return 0
@@ -82,7 +83,7 @@ _download_server_jar() {
 
 main() {
 	local MINECRAFT_VERSION=$1
-	
+
 	_download_server_jar "$MINECRAFT_VERSION"
 	_download_java
 	_download_mcrcon
