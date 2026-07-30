@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-PROJECT_ROOT="$(git rev-parse --show-toplevel)/mc-server"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MC_SERVER_ROOT="$PROJECT_ROOT/mc-server"
 
-source "$PROJECT_ROOT/tests/test-helper/close_non_std_fds.bash" || exit 1
+source "$MC_SERVER_ROOT/tests/test-helper/close_non_std_fds.bash" || exit 1
 
 start_minecraft_server() {
 	(
 		flock -n 200 || exit 1
 		local MIN_MEMORY="${1:-1024}M"
 		local MAX_MEMORY="${2:-2048}M"
-		local SERVER_DIR="$PROJECT_ROOT/server"
+		local SERVER_DIR="$MC_SERVER_ROOT/server"
 		local START_MINECRAFT_SERVER_COMMAND="java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY -jar server.jar --nogui"
 
 		cd "$SERVER_DIR" || exit 1

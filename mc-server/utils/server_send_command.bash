@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-PROJECT_ROOT="$(git rev-parse --show-toplevel)/mc-server"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MC_SERVER_ROOT="$PROJECT_ROOT/mc-server"
 
-source "$PROJECT_ROOT/utils/load_dotenv.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/load_dotenv.bash" || exit 1
 
 server_send_command() {
 	local RECEIVED_COMMAND="${1:?ERROR: send_command command needed and got nothing}"

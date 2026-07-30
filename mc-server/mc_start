@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-PROJECT_ROOT="$(git rev-parse --show-toplevel)/mc-server"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MC_SERVER_ROOT="$PROJECT_ROOT/mc-server"
 
-source "$PROJECT_ROOT/../utils/confirmation_prompt.sh" || exit 1
-source "$PROJECT_ROOT/utils/server_send_command.bash" || exit 1
-source "$PROJECT_ROOT/utils/get_minecraft_server_pid.bash" || exit 1
-source "$PROJECT_ROOT/utils/load_dotenv.bash" || exit 1
+source "$PROJECT_ROOT/utils/confirmation_prompt.sh" || exit 1
+source "$MC_SERVER_ROOT/utils/server_send_command.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/get_minecraft_server_pid.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/load_dotenv.bash" || exit 1
 
 start_server_in_terminal() {
-	local START_SERVER_COMMAND="cd $PROJECT_ROOT/utils && ./start_minecraft_server.bash $*"
+	local START_SERVER_COMMAND="cd $MC_SERVER_ROOT/utils && ./start_minecraft_server.bash $*"
 
 	if ! screen -ls | grep -q "$SERVER_TERMINAL_ENV"; then
 		screen -AdmS "$SERVER_TERMINAL_ENV" -L -Logfile "$LOG_FILE_ENV" -t tab0 bash
@@ -22,7 +23,7 @@ start_server_in_terminal() {
 }
 
 _eula_prompt() {
-	local SERVER_DIR="$PROJECT_ROOT/server"
+	local SERVER_DIR="$MC_SERVER_ROOT/server"
 	local EULA="$SERVER_DIR/eula.txt"
 	local TIMEOUT=30
 	
@@ -50,7 +51,7 @@ _eula_prompt() {
 }
 
 _add_server_properties() {
-	local SERVER_CONFIG="$PROJECT_ROOT/server/server.properties"
+	local SERVER_CONFIG="$MC_SERVER_ROOT/server/server.properties"
 	local KEY=$1
 	local VALUE=$2
 	if grep "$KEY=.*" "$SERVER_CONFIG"; then
@@ -62,7 +63,7 @@ _add_server_properties() {
 
 _configure_minecraft_rcon() {
 	#https://minecraft.wiki/w/RCON
-	local SERVER_CONFIG="$PROJECT_ROOT/server/server.properties"
+	local SERVER_CONFIG="$MC_SERVER_ROOT/server/server.properties"
 	local PROMPT="Would you like to enable RCON?"
 	if confirmation_prompt "$PROMPT"; then
 		_add_server_properties "enable-rcon" "true"

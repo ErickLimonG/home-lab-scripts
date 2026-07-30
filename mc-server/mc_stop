@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-PROJECT_ROOT="$(git rev-parse --show-toplevel)/mc-server"
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+MC_SERVER_ROOT="$PROJECT_ROOT/mc-server"
 #TODO: add flag to force shutdown
 
-source "$PROJECT_ROOT/utils/get_minecraft_server_pid.bash" || exit 1
-source "$PROJECT_ROOT/utils/server_send_command.bash" || exit 1
-source "$PROJECT_ROOT/utils/load_dotenv.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/get_minecraft_server_pid.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/server_send_command.bash" || exit 1
+source "$MC_SERVER_ROOT/utils/load_dotenv.bash" || exit 1
 
 _stop_minecraft_server() {
 	local MODE=$1
